@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-family: 'Google Sans', 'Roboto', 'Arial', sans-serif;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #3c4043;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-google-blue hover:bg-google-blue-dark text-white font-medium px-6 py-2 rounded-md transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-white hover:bg-google-gray-50 text-google-gray-700 border border-google-gray-300 font-medium px-6 py-2 rounded-md transition-colors duration-200;
+  }
+  
+  .input-field {
+    @apply w-full px-3 py-2 border border-google-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-google-blue focus:border-transparent;
+  }
+  
+  .calendar-grid {
+    @apply grid grid-cols-7 gap-0 border border-google-gray-200;
+  }
+  
+  .calendar-cell {
+    @apply min-h-[120px] border-r border-b border-google-gray-200 p-1 bg-white hover:bg-google-gray-50 cursor-pointer;
+  }
+  
+  .event-block {
+    @apply text-xs px-2 py-1 rounded-sm text-white font-medium truncate cursor-pointer;
+  }
+}
