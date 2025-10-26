@@ -14,7 +14,7 @@ A high-fidelity Google Calendar clone built with modern web technologies. This f
 1. **Clone the repository**
    ```bash
    git clone https://github.com/gprasun/google-calendar-clone.git
-   cd calendar
+   cd google-calendar-clone
    ```
 
 2. **Backend Setup**
