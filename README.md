@@ -13,7 +13,7 @@ A high-fidelity Google Calendar clone built with modern web technologies. This f
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/gprasun/google-calendar-clone.git
    cd calendar
    ```
 
@@ -23,6 +23,7 @@ A high-fidelity Google Calendar clone built with modern web technologies. This f
    npm install
    
    # Configure environment
+   cp env.example .env
    # Edit .env with your database credentials
    
    # Setup database

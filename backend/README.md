@@ -39,7 +39,7 @@ A high-fidelity backend API for a Google Calendar clone built with Node.js, Type
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/gprasun/google-calendar-clone.git
    cd backend
    ```
 
