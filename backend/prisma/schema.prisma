@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  avatar    String?
+  timezone  String   @default("UTC")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  calendars Calendar[]
+  events    Event[]
+  sharedCalendars CalendarShare[]
+  participantEvents EventParticipant[]
+
+  @@map("users")
+}
+
+model Calendar {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String   @default("#4285f4")
+  isDefault   Boolean  @default(false)
+  isPublic    Boolean  @default(false)
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  events Event[]
+  shares CalendarShare[]
+
+  @@map("calendars")
+}
+
+model CalendarShare {
+  id         String   @id @default(cuid())
+  calendarId String
+  userId     String
+  role       String   @default("viewer") // viewer, editor, owner
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  calendar Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([calendarId, userId])
+  @@map("calendar_shares")
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  location    String?
+  startTime   DateTime
+  endTime     DateTime
+  isAllDay    Boolean  @default(false)
+  color       String   @default("#4285f4")
+  calendarId  String
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Recurring event fields
+  isRecurring     Boolean @default(false)
+  recurrenceRule  String? // RRULE format
+  parentEventId   String? // For recurring event instances
+  originalEventId String? // Reference to the original recurring event
+
+  // Relations
+  calendar     Calendar           @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  participants EventParticipant[]
+
+  @@map("events")
+}
+
+model EventParticipant {
+  id        String   @id @default(cuid())
+  eventId   String
+  userId    String?  // NULL for external participants
+  email     String   // Always store for invitations/notifications
+  name      String?
+  status    String   @default("pending") // pending, accepted, declined, tentative
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])   // Prevent duplicate user invites
+  @@unique([eventId, email])    // Prevent duplicate email invites
+  @@map("event_participants")
+}
+
+model RecurringEventException {
+  id        String   @id @default(cuid())
+  eventId   String
+  date      DateTime
+  action    String   // delete, modify
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, date])
+  @@map("recurring_event_exceptions")
+}
